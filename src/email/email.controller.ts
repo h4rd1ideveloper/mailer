@@ -2,9 +2,6 @@ import {
   Controller,
   Post,
   Body,
-  Options,
-  Req,
-  Res,
   HttpException,
   HttpStatus,
 } from '@nestjs/common';
@@ -24,16 +21,5 @@ export class EmailController {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
-  }
-
-  @Options('send') options(@Req() req, @Res() res) {
-    res
-      .set({
-        'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Methods': 'POST, OPTIONS',
-        'Access-Control-Allow-Headers': 'Content-Type',
-      })
-      .status(204)
-      .send();
   }
 }
