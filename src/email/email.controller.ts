@@ -1,4 +1,13 @@
-import { Controller, Post, Body, Options, Req, Res } from '@nestjs/common';
+import {
+  Controller,
+  Post,
+  Body,
+  Options,
+  Req,
+  Res,
+  HttpException,
+  HttpStatus,
+} from '@nestjs/common';
 import { EmailService } from './email.service';
 import { CreateEmailDto } from './dto/create-email.dto';
 
@@ -7,7 +16,14 @@ export class EmailController {
   constructor(private readonly emailService: EmailService) {}
 
   @Post('send') send(@Body() createEmailDto: CreateEmailDto) {
-    return this.emailService.sendEmail(createEmailDto);
+    try {
+      return this.emailService.sendEmail(createEmailDto);
+    } catch (e) {
+      throw new HttpException(
+        'Internal server error:' + ' ' + e?.message || '!',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
+    }
   }
 
   @Options('send') options(@Req() req, @Res() res) {
