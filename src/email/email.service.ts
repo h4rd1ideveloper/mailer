@@ -8,7 +8,7 @@ export class EmailService {
   private transporter;
 
   constructor(private configService: ConfigService) {
-    this.transporter = nodemailer.createTransport({
+    const config = {
       host: this.configService.get('SMTP_HOST'),
       port: parseInt(this.configService.get('SMTP_PORT') as string),
       secure: false,
@@ -16,10 +16,13 @@ export class EmailService {
         user: this.configService.get('SMTP_USER'),
         pass: this.configService.get('SMTP_PASS'),
       },
-    });
+    };
+    console.log({ config });
+    this.transporter = nodemailer.createTransport(config);
   }
 
   async sendEmail(createEmailDto: CreateEmailDto) {
+    console.log({ createEmailDto });
     const mailOptions = {
       from: `"${createEmailDto.name}" <${createEmailDto.email}>`,
       to: this.configService.get('SMTP_USER'),
