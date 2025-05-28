@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { CreateEmailDto } from './dto/create-email.dto';
 import * as nodemailer from 'nodemailer';
 import { ConfigService } from '@nestjs/config';
@@ -25,7 +25,10 @@ export class EmailService {
       });
     } catch (e) {
       console.log(e);
-      throw new Error('Não foi possivel criar o transporter');
+      throw new HttpException(
+        'Não foi possivel criar o transporter:' + e?.message || '',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 
@@ -43,10 +46,10 @@ export class EmailService {
       return { success: true, message: 'Email sent successfully' };
     } catch (e) {
       console.log(e);
-      return {
-        success: false,
-        message: 'Erro ao enviar email:' + e?.message || '',
-      };
+      throw new HttpException(
+        'Erro ao enviar email:' + e?.message || '',
+        HttpStatus.INTERNAL_SERVER_ERROR,
+      );
     }
   }
 }
