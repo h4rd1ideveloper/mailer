@@ -12,14 +12,17 @@ export class EmailService {
       const config = {
         host: this.configService.get('SMTP_HOST'),
         port: parseInt(this.configService.get('SMTP_PORT') as string),
-        secure: false,
+        secure: true,
         auth: {
           user: this.configService.get('SMTP_USER'),
           pass: this.configService.get('SMTP_PASS'),
         },
       };
       console.log({ config });
-      this.transporter = nodemailer.createTransport(config);
+      this.transporter = nodemailer.createTransport(config, {
+        logger: true,
+        debug: true,
+      });
     } catch (e) {
       console.log(e);
       throw new Error('Não foi possivel criar o transporter');
