@@ -9,10 +9,10 @@ export class EmailService {
   private transporter;
 
   constructor(private configService: ConfigService) {
-    const config: SMTPTransport | SMTPTransport.Options | string = {
+    const config: SMTPTransport.Options = {
       host: this.configService.get('SMTP_HOST'),
       port: parseInt(this.configService.get('SMTP_PORT') as string),
-      secure: true,
+      secure: false,
       auth: {
         user: this.configService.get('SMTP_USER'),
         pass: this.configService.get('SMTP_PASS'),
@@ -21,7 +21,9 @@ export class EmailService {
         rejectUnauthorized: false,
       },
     };
+
     console.log({ config });
+
     this.transporter = nodemailer.createTransport(config, {
       logger: true,
       debug: true,
@@ -30,10 +32,11 @@ export class EmailService {
 
   async sendEmail(createEmailDto: CreateEmailDto) {
     const mailOptions = {
-      from: `"${createEmailDto.name}" <${createEmailDto.email}>`,
+      from: `"${createEmailDto.name}" <${this.configService.get('SMTP_USER')}>`,
       to: this.configService.get('SMTP_USER'),
       subject: createEmailDto.subject,
       text: createEmailDto.message,
+      replyTo: createEmailDto.email,
     };
 
     await this.transporter.sendMail(mailOptions);
