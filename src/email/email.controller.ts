@@ -4,6 +4,7 @@ import {
   Body,
   HttpException,
   HttpStatus,
+  Get,
 } from '@nestjs/common';
 import { EmailService } from './email.service';
 import { CreateEmailDto } from './dto/create-email.dto';
@@ -21,5 +22,9 @@ export class EmailController {
         HttpStatus.INTERNAL_SERVER_ERROR,
       );
     }
+  }
+  @Get('/debug-sentry')
+  getError() {
+    throw new Error('My first Sentry error!');
   }
 }
