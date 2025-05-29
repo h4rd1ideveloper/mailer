@@ -34,12 +34,12 @@ export class EmailService {
     const mailOptions = {
       from: `"${createEmailDto.name}" <${this.configService.get('SMTP_USER')}>`,
       to: this.configService.get('SMTP_USER'),
-      subject: `
-      message: ${createEmailDto.message}
+      subject: `${createEmailDto.subject}`,
+      text: ` 
+        message: ${createEmailDto.message}
       
-      from:"${createEmailDto.name}" <${createEmailDto.email}>
+        from:"${createEmailDto.name}" <${createEmailDto.email}>
       `,
-      text: createEmailDto.message,
       replyTo: createEmailDto.email,
     };
 
