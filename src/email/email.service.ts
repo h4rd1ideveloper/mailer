@@ -32,9 +32,13 @@ export class EmailService {
 
   async sendEmail(createEmailDto: CreateEmailDto) {
     const mailOptions = {
-      from: `"${createEmailDto.name}" <${createEmailDto.email}>`,
+      from: `"${createEmailDto.name}" <${this.configService.get('SMTP_USER')}>`,
       to: this.configService.get('SMTP_USER'),
-      subject: createEmailDto.subject,
+      subject: `
+      message: ${createEmailDto.message}
+      
+      from:"${createEmailDto.name}" <${createEmailDto.email}>
+      `,
       text: createEmailDto.message,
       replyTo: createEmailDto.email,
     };
